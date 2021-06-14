@@ -15,7 +15,6 @@ class P2pServer{
     }
 
     listen(){
-        console.log(P2P_PORT);
         const server = new WebSocket.Server({port: P2P_PORT});
         server.on('connection', socket => this.connectSocket(socket));
 
@@ -32,7 +31,6 @@ class P2pServer{
     }
 
     connectSocket(socket){
-        console.log(`connected`);
         this.sockets.push(socket);
         console.log('Socket connected');
         this.messageHandler(socket);
@@ -47,7 +45,7 @@ class P2pServer{
                     this.blockchain.replaceChain(data.chain);
                     break;
                 case MESSAGE_TYPES.transaction:
-                    this.transactionPool.updateOrAddTransactions(data.transaction);
+                    this.transactionPool.updateOrAddTransaction(data.transaction);
                     break;
             }
             
