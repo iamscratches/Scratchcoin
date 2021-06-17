@@ -6,7 +6,8 @@ class Wallet{
     constructor(){
         this.balance = INITIAL_BALANCE;
         this.keyPair = ChainUtil.genKeyPair();
-        this.publicKey = this.keyPair.getPublic().encode('hex');        
+        this.publicKey = this.keyPair.getPublic().encode('hex');   
+        this.users = [];
     }
     toString() {
         return `Wallet - 
@@ -68,6 +69,17 @@ class Wallet{
         const blockchainWallet = new this();
         blockchainWallet.address = 'blockchain-wallet';
         return blockchainWallet;
+    }
+
+    addUser(username, publicKey) {
+        this.users[username] = publicKey;
+        var usersList = Object.keys(this.users).map( k => {
+            return {
+              name: k,
+              value: this.users[k]
+            };
+          });
+        return usersList;
     }
 }
 

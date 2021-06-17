@@ -18,7 +18,9 @@ const miner = new Miner(bc, tp, wallet, p2pServer);
 app.use(bodyParser.json());
 
 app.get('/blocks', (req, res) => {
-    res.json(bc.chain);
+    blocks = bc.chain;
+    blockSize = blocks.length;
+    res.json({blockSize, blocks});
 });
 
 app.post('/mine', (req, res) => {
@@ -29,11 +31,15 @@ app.post('/mine', (req, res) => {
 });
 
 app.get('/transaction', (req, res) => {
-    res.json(tp.transactions)
+    memPool = tp.transactions;
+    memPoolSize = memPool.length;
+    res.json({memPoolSize, memPool});
 });
 
 app.post('/transact', (req, res) => {
-    const {recipient, amount} = req.body;
+    let {recipient, amount} = req.body;
+    if(wallet.users[recipient])
+        recipient = wallet.users[recipient];
     const transaction = wallet.createTransaction(recipient, amount, bc, tp);
     p2pServer.broadcastTransaction(transaction);
     res.redirect('/transaction');
@@ -47,6 +53,25 @@ app.get('/mine-transaction', (req, res) => {
     const block = miner.mine();
     console.log(`New Block has been added : ${block.toString()}`);
     res.redirect('/blocks');
+})
+
+app.get('/wallet', (req, res) => {
+    let savedUsers = wallet.user;
+    res.json({
+        balance: wallet.calculateBalance(bc), 
+        Privatekey: wallet.keyPair.getPrivate(),
+        PublicKey: wallet.keyPair.getPublic().encode('hex'),
+        savedUsers
+    })
+})
+
+app.post('/save-users', (req, res) => {
+    const {username, publicKey} = req.body;
+    const usersList = wallet.addUser(username, publicKey);
+    res.json({
+        message: 'user added successfully',
+        users: usersList
+    });
 })
 
 app.listen(HTTP_PORT, () => console.log(`Listening on port ${HTTP_PORT}`));

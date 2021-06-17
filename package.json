@@ -8,8 +8,8 @@
     "dev-test": "nodemon dev-test",
     "start": "node ./app",
     "dev": "nodemon ./app",
-    "dev-peer1": "npx cross-env HTTP_PORT=3002 P2P_PORT=5002 PEERS=ws://localhost:5001 nodemon ./app",
-    "dev-peer2": "npx cross-env HTTP_PORT=3003 P2P_PORT=5003 PEERS=ws://localhost:5001,ws://localhost:5002 nodemon ./app"
+    "dev-peer1": "npx cross-env HTTP_PORT=3002 P2P_PORT=5002 PEERS=ws://localhost:5001 NAME=suvnkr nodemon ./app",
+    "dev-peer2": "npx cross-env HTTP_PORT=3003 P2P_PORT=5003 PEERS=ws://localhost:5001,ws://localhost:5002 NAME=subhankar nodemon ./app"
   },
   "jest": {
     "testEnvironment": "node"
